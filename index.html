@@ -19,6 +19,28 @@
   </nav>
   <div id="toast" role="status"></div>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
-  <script src="app.js"></script>
+  <script src="app.js?v=20260829"></script>
+  <script>
+    // A integração automática da Uber foi desativada. Mantemos a opção
+    // "Uber" para lançamentos manuais de ganhos.
+    function hideUberIntegration(root = document) {
+      const nodes = root.querySelectorAll('*');
+      nodes.forEach(el => {
+        if (el.children.length > 0) return;
+        const text = (el.textContent || '').trim().toLowerCase();
+        const href = (el.getAttribute && el.getAttribute('href') || '').toLowerCase();
+        const isIntegration =
+          href.includes('lopes-tur-uber') ||
+          ((text.includes('integração') || text.includes('integracao') || text.includes('conectar') || text.includes('sincronizar')) && text.includes('uber'));
+        if (isIntegration) {
+          const container = el.closest('button, a, .card, .form-card, section, .row-item, div');
+          if (container && container.id !== 'app') container.remove();
+        }
+      });
+    }
+    const observer = new MutationObserver(() => hideUberIntegration());
+    observer.observe(document.getElementById('app'), { childList: true, subtree: true });
+    hideUberIntegration();
+  </script>
 </body>
 </html>
